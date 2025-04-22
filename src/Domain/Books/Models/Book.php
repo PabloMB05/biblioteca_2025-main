@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Spatie\MediaLibrary\HasMedia;
 use Domain\Loan\Models\Loan;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Book extends Model implements HasMedia
@@ -52,4 +53,9 @@ class Book extends Model implements HasMedia
     {
         return $this->hasMany(Loan::class);
     }
+    public function activeLoan()
+    {
+        return $this->hasOne(Loan::class)->where('is_active', true);
+    }
+    
 }

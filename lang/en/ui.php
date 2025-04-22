@@ -650,6 +650,30 @@ return [
         "Poetry" => "Poetry",
     ],
 ],
-
+'loans' => [
+        'title' => 'Loans',
+        'buttons' => [
+            'new' => 'New Loan',
+        ],
+        'placeholders' => [
+            'user_email' => 'Enter user email',
+            'book_title' => 'Enter book title',
+            'due_date' => 'Enter due date',
+        ],
+        'filters'=>[
+                'user_email'=> 'User Email',
+                'book_title'=> 'Book Title',
+                'due_date'=> 'Due Date'
+        ],
+        'columns' => [
+            'user_id' => 'User ID',
+            'book_id' => 'Book ID',
+            'due_date' => '[Due Date',
+            'is_active' => 'Is Active',
+            'is_late' => 'Is Late',
+            'created_at' => 'Created At',
+            'actions'=> 'Actions'
+        ],
+    ],
 
 ];

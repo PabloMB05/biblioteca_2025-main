@@ -15,11 +15,11 @@ interface PageProps {
     [key: string]: unknown;
 }
 
-interface LoanLayoutProps extends PropsWithChildren {
+interface LoanLayout extends PropsWithChildren {
     title: string;
 }
 
-export function LoanLayout({ title, children }: LoanLayoutProps) {
+export function LoanLayout({ title, children }: LoanLayout) {
     const { t } = useTranslations();
     const { flash } = usePage<PageProps>().props;
 
@@ -38,7 +38,7 @@ export function LoanLayout({ title, children }: LoanLayoutProps) {
             href: '/dashboard',
         },
         {
-            title: 'Préstamos',
+            title: t('ui.loans.title'),
             href: '/loans',
         },
     ];

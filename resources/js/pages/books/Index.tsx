@@ -10,7 +10,7 @@ import { useTranslations } from '@/hooks/use-translations';
 import { BookLayout } from '@/layouts/books/BookLayout';
 import { Link, usePage } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
-import { PencilIcon, PlusIcon, TrashIcon } from 'lucide-react';
+import { BookPlus, Check, PencilIcon, PlusIcon, TrashIcon, X } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
@@ -119,10 +119,24 @@ export default function BooksIndex() {
                     header: t('ui.books.columns.editor') || 'Editor',
                     accessorKey: 'editor',
                 }),
-                createTextColumn<Book>({
+                createActionsColumn<Book>({
                     id: 'isbn',
                     header: t('ui.books.columns.isbn') || 'ISBN',
-                    accessorKey: 'isbn',
+                   renderActions: (books) =>{
+                    let $isbn = books.isbn;
+                    let $isbn_count = books.count_book;
+                    let $isbn_count_loan = books.count_loan_book;
+                    return(
+                        <span>{$isbn} <p>({$isbn_count_loan}/{$isbn_count})</p> </span>
+                    )
+
+                   }
+                }),
+                 createTextColumn<Book>({
+                    id: 'avaiable',
+                    header: t('ui.loans.columns.avaiable') || 'avaiable',
+                    accessorKey: 'avaiable',
+                    format: (value) => (value ? <Check/>: <X/>),
                 }),
                 createTextColumn<Book>({
                     id: 'floor_id',
@@ -149,6 +163,16 @@ export default function BooksIndex() {
                     header: t('ui.books.columns.actions') || 'Actions',
                     renderActions: (book) => (
                         <div className="flex gap-2">
+                             <Link href={`/books/${book.id}/edit?page=${currentPage}&perPage=${perPage}`}>
+                                <Button 
+                                    variant="outline" 
+                                    size="icon" 
+                                    title={t('ui.books.buttons.edit') || 'Edit book'}
+                                    className="hover:bg-primary/10"
+                                >
+                                    <BookPlus className="h-4 w-4" />
+                                </Button>
+                            </Link>
                             <Link href={`/books/${book.id}/edit?page=${currentPage}&perPage=${perPage}`}>
                                 <Button 
                                     variant="outline" 

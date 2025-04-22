@@ -401,6 +401,7 @@ function renderFilterInput(
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0">
             <Calendar
+              timeZone="Europe/Madrid"
               mode="single"
               selected={field.value}
               onSelect={(date: Date | undefined) => {

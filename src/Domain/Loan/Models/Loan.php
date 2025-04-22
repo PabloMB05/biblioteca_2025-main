@@ -12,6 +12,7 @@ class Loan extends Model
         'book_id',
         'user_id',
         'due_date',
+        'return_date',
         'is_active',
         'is_late',
     ];    

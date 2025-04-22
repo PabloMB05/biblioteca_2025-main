@@ -31,6 +31,7 @@ class LoanSeeder extends Seeder
                 'user_id' => $users->random()->id, // Asignar un usuario aleatorio
                 'book_id' => $books->random()->id, // Asignar un libro aleatorio
                 'due_date' => Carbon::now()->addDays(30), 
+                'return_date' => null,
                 'is_active' => true, // El préstamo está activo por defecto
             ]);
         }

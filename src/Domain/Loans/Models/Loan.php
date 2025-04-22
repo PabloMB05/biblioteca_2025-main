@@ -2,26 +2,39 @@
 
 namespace Domain\Loans\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Domain\Books\Models\Book;
 use Domain\Users\Models\User;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 class Loan extends Model
 {
+    use HasUuids;
+
     protected $fillable = [
         'id',
-        'book_id',
         'user_id',
+        'book_id',
         'due_date',
+        'is_overdue',
+        'returned_at',
         'is_active',
-        'is_late',
-    ];    
-    public function book()
+    ];
+
+    protected $casts = [
+        'due_date' => 'datetime:dd/mm/YYYY', 
+        'created_at' => 'datetime:dd/mm/YYYY',
+        'returned_at' => 'datetime:dd/mm/YYYY'
+    ];
+
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Book::class);
-    }
-    public function user()
-    {
-        return $this->belongsTo(User::class);
+        return $this->BelongsTo(User::class);
     }
 
+    public function book(): BelongsTo
+    {
+        return $this->BelongsTo(Book::class);
+    }
 }

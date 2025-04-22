@@ -6,46 +6,51 @@ use Domain\Loans\Models\Loan;
 use Domain\Loans\Data\Resources\LoanResource;
 use Domain\Users\Models\User;
 use Domain\Books\Models\Book;
-
 class LoanIndexAction
 {
     public function __invoke(?array $search = null, int $perPage = 10)
     {
-        // Inicializar las variables de filtro con valores por defecto
-        $userId = $bookId = $dueDate = $isActive = $isLate = null;
+        // Inicializar las variables de búsqueda
+        $user_email = '';
+        $book_title = '';
+        $due_date = '';
 
         if ($search) {
-            // Asignar los valores de búsqueda si están presentes en el array
-            $userId = isset($search[0]) && $search[0] !== "null" ? $search[0] : null;
-            $bookId = isset($search[1]) && $search[1] !== "null" ? $search[1] : null;
-            $dueDate = isset($search[2]) && $search[2] !== "null" ? $search[2] : null;
-            $isActive = isset($search[3]) && $search[3] !== "null" ? $search[3] : null;
-            $isLate = isset($search[4]) && $search[4] !== "null" ? $search[4] : null;
+
+            $user_email = $search[0];
+            $book_title = $search[1];
+            $due_date = $search[2];
         }
 
-        // Construir la consulta para los préstamos con los filtros proporcionados
-        $loansQuery = Loan::query()
-            ->when($userId !== null, function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            })
-            ->when($bookId !== null, function ($query) use ($bookId) {
-                $query->where('book_id', $bookId);
-            })
-            ->when($dueDate !== null, function ($query) use ($dueDate) {
-                $query->whereDate('due_date', $dueDate);
-            })
-            ->when($isActive !== null, function ($query) use ($isActive) {
-                $query->where('is_active', $isActive);
-            })
-            ->when($isLate !== null, function ($query) use ($isLate) {
-                $query->where('is_late', $isLate);
-            })
-            ->latest(); // Ordenar por fecha de creación de forma descendente
 
-        // Paginación
-        $paginated = $loansQuery->paginate($perPage);
+        $UserQuery = User::query()
+            ->when($user_email !== 'null', function ($query) use ($user_email) {
+                $query->where('email', 'ILIKE', '%' . $user_email . '%');
+            })
+            ->pluck('id');
 
-        // Transformar los resultados con el recurso LoanResource
-        return $paginated->through(fn ($loan) => LoanResource::fromModel($loan));
+        $BookQuery = Book::query()
+            ->when($book_title !== 'null', function ($query) use ($book_title) {
+                $query->where('title', 'ILIKE', '%' . $book_title . '%');
+            })
+            ->pluck('id');
+
+
+        $LoansQuery = Loan::query()
+            ->when($due_date !== 'null', function ($query) use ($due_date) {
+                $query->whereDate('due_date', '=', $due_date); 
+            });
+
+        $LoansQuery = $LoansQuery
+            ->when($user_email !== 'null', function ($query) use ($UserQuery) {
+                $query->whereIn('user_id', $UserQuery);
+            })
+            ->when($book_title !== 'null', function ($query) use ($BookQuery) {
+                $query->whereIn('book_id', $BookQuery);
+            })
+            ->latest()->paginate($perPage); 
+
+
+        return $LoansQuery->through(fn ($loan) => LoanResource::fromModel($loan));
     }
 }

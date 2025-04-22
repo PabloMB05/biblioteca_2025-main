@@ -30,9 +30,8 @@ export default function LoansIndex() {
 
     const combinedSearch = [
         filters.user_email ? filters.user_email : 'null',
-        filters.book_id ? filters.book_id : 'null',
+        filters.book_title ? filters.book_title : 'null',
         filters.due_date ? filters.due_date : 'null',
-        filters.is_active ? filters.is_active : 'null',
     ];
 
     const {
@@ -101,12 +100,18 @@ export default function LoansIndex() {
                     header: t('ui.loans.columns.is_late') || 'Late',
                     accessorKey: 'is_late',
                     format: (value) => (value ? <Check/>: <X/>),
+                }),                
+                createDateColumn<Loan>({
+                    id: 'return_date',
+                    header: t('ui.loans.columns.return_date') || 'Created At',
+                    accessorKey: 'return_date',
                 }),
                 createDateColumn<Loan>({
                     id: 'created_at',
                     header: t('ui.loans.columns.created_at') || 'Created At',
                     accessorKey: 'created_at',
                 }),
+
                 createActionsColumn<Loan>({
                     id: 'actions',
                     header: t('ui.loans.columns.actions') || 'Actions',
@@ -121,6 +126,7 @@ export default function LoansIndex() {
                                 >
                                     <PencilIcon className="h-4 w-4" />
                                 </Button>
+                                
                             </Link>
                             <DeleteDialog
                                 id={loan.id}
@@ -145,11 +151,13 @@ export default function LoansIndex() {
                 }),
             ] as ColumnDef<Loan>[],
         [t, handleDeleteLoan],
+
     );
 
     return (
+
         <LoanLayout title={t('ui.loans.title')}>
-            <div className="container py-8">
+            <div className="container py-8 ml-4">
                 <div className="space-y-6">
                     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                         <div>
@@ -158,7 +166,7 @@ export default function LoansIndex() {
                             </p>
                         </div>
                         <Link href="/loans/create">
-                            <Button className="gap-2">
+                            <Button className="gap-2 mr-10">
                                 <PlusIcon className="h-4 w-4" />
                                 {t('ui.loans.buttons.new')}
                             </Button>
@@ -172,15 +180,15 @@ export default function LoansIndex() {
                                     [
                                         {
                                             id: 'user_email',
-                                            label: t('ui.loans.filters.user_id') || 'User ID',
+                                            label: t('ui.loans.filters.user_email') || 'User Email',
                                             type: 'text',
                                             placeholder: t('ui.loans.placeholders.user_email') || 'Search by user ID...',
                                         },
                                         {
-                                            id: 'book_id',
-                                            label: t('ui.loans.filters.book_id') || 'Book ID',
+                                            id: 'book_title',
+                                            label: t('ui.loans.filters.book_title') ,
                                             type: 'text',
-                                            placeholder: t('ui.loans.placeholders.book_id') || 'Search by book ID...',
+                                            placeholder: t('ui.loans.placeholders.book_title') || 'Search by book ID...',
                                         },
                                         {
                                             id: 'due_date',

@@ -17,7 +17,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('zones', \App\Zones\Controllers\ZoneController::class);
     Route::resource('bookcases', \App\Bookcases\Controllers\BookcaseController::class);
     Route::resource('books', \App\Books\Controllers\BookController::class);
-    Route::resource('loans', \App\Loans\Controllers\LoanController::class);
+    //Route::resource('loans', \App\Loans\Controllers\LoanController::class);
 });
 
 

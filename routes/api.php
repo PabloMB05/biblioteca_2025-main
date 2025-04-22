@@ -1,3 +1,4 @@
+
 <?php
 
 use App\Http\Controllers\Api\UserApiController;
@@ -45,11 +46,12 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::put('/books/{book}', [BookApiController::class, 'update']);  
     Route::delete('/books/{book}', [BookApiController::class, 'destroy']); 
     
-    // Rutas de loans
-    Route::get('/loans', [LoanApiController::class, 'index']);  
-    Route::get('/loans/{loan}', [LoanApiController::class, 'show']); 
-    Route::post('/loans', [LoanApiController::class, 'store']);  
-    Route::put('/loans/{loan}', [LoanApiController::class, 'update']);  
-    Route::delete('/loans/{loan}', [LoanApiController::class, 'destroy']); 
+    // // Rutas de loans
+    // Route::get('/loans', [LoanApiController::class, 'index']);  
+    // Route::get('/loans/{loan}', [LoanApiController::class, 'show']); 
+    // Route::post('/loans', [LoanApiController::class, 'store']);  
+    // Route::put('/loans/{loan}', [LoanApiController::class, 'update']);  
+    // Route::delete('/loans/{loan}', [LoanApiController::class, 'destroy']); 
+
 
 });

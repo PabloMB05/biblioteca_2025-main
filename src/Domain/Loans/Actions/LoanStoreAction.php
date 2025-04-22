@@ -4,20 +4,35 @@ namespace Domain\Loans\Actions;
 
 use Domain\Loans\Data\Resources\LoanResource;
 use Domain\Loans\Models\Loan;
+use Domain\Users\Models\User;
+use Domain\Books\Models\Book;
+use Carbon\Carbon;
 
 class LoanStoreAction
 {
     public function __invoke(array $data): LoanResource
     {
-        // Crear nuevo préstamo
+        // Buscar el usuario por su email
+        $user = User::where('email', $data['email'])->firstOrFail();
+        $userId = $user->id;
+
+        // Buscar un libro con ese ISBN que no esté prestado actualmente
+        $book = Book::where('isbn', $data['isbn'])
+            ->whereDoesntHave('activeLoan', fn ($q) => $q->where('is_active', true))
+            ->firstOrFail();
+
+        // Convertir due_date a instancia de Carbon
+        $dueDate = Carbon::parse($data['due_date']);
+
+        // Crear el préstamo
         $loan = Loan::create([
-            'user_id' => $data['user_id'],
-            'book_id' => $data['book_id'],
-            'due_date' => $data['due_date'],
-            'is_active' => $data['is_active'] ?? true, // Valor por defecto si no se pasa
-            'is_late' => $data['is_late'] ?? false,    // Valor por defecto si no se pasa
+            'user_id' => $userId,
+            'book_id' => $book->id,
+            'due_date' => $dueDate,
+            'status' => true, // préstamo activo
         ]);
 
+        // Retornar el recurso del préstamo
         return LoanResource::fromModel($loan);
     }
 }

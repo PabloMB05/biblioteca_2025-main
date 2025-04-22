@@ -8,6 +8,9 @@ export interface Book {
   author: string;
   length: number;
   editor: string;
+  avaiable: boolean;
+  count_book: string;
+  count_loan_book: string;
   isbn: string;
   bookcase_id: number;
   zone_id: number;

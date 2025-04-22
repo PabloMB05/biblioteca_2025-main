@@ -20,7 +20,7 @@ class LoanApiController extends Controller
     public function index(Request $request, LoanIndexAction $action)
     {
         // Devuelve los préstamos con paginación y búsqueda
-        return response()->json($action($request->search, $request->integer('per_page', 10)));
+        // return response()->json($action($request->search, $request->integer('per_page', 10)));
     }
 
     /**
@@ -28,8 +28,7 @@ class LoanApiController extends Controller
      */
     public function show(Loan $loan)
     {
-        // Devuelve el préstamo solicitado
-        return response()->json(['loan' => $loan]);
+        // return response()->json(['loan' => $loan]);
     }
 
     /**
@@ -44,17 +43,17 @@ class LoanApiController extends Controller
             'return_date' => ['required', 'date'],
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        // if ($validator->fails()) {
+        //     return response()->json(['errors' => $validator->errors()], 422);
+        // }
 
         // Crea el préstamo
         $loan = $action($validator->validated());
 
-        return response()->json([
-            'message' => __('messages.loans.created'),
-            'loan' => $loan
-        ]);
+        // return response()->json([
+        //     'message' => __('messages.loans.created'),
+        //     'loan' => $loan
+        // ]);
     }
 
     /**
@@ -76,10 +75,10 @@ class LoanApiController extends Controller
         // Actualiza el préstamo
         $updatedLoan = $action($loan, $validator->validated());
 
-        return response()->json([
-            'message' => __('messages.loans.updated'),
-            'loan' => $updatedLoan
-        ]);
+        // return response()->json([
+        //     'message' => __('messages.loans.updated'),
+        //     'loan' => $updatedLoan
+        // ]);
     }
 
     /**
@@ -88,13 +87,13 @@ class LoanApiController extends Controller
     public function destroy(Loan $loan, LoanDestroyAction $action)
     {
         if (!$loan) {
-            return response()->json(['error' => 'Loan not found'], 404);
+            // return response()->json(['error' => 'Loan not found'], 404);
         }
 
         // Elimina el préstamo
         $action($loan);
-        return response()->json([
-            'message' => __('messages.loans.deleted')
-        ]);
+        // return response()->json([
+        //     'message' => __('messages.loans.deleted')
+        // ]);
     }
 }

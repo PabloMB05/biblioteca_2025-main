@@ -160,7 +160,7 @@ export function BookForm({ initialData, page, perPage, genres, explosion, floors
             }
         },
     });
-
+    
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         e.stopPropagation();
@@ -333,7 +333,7 @@ export function BookForm({ initialData, page, perPage, genres, explosion, floors
                                     if (!value) {
                                         return t('ui.validation.required', { attribute: 'ISBN' });
                                     }
-                                    const isbnRegex = /^(?:\d{10}|\d{13})$/;
+                                    const isbnRegex = /^(?:\d{9}|\d{13})$/;
                                     return !isbnRegex.test(value) ? t('ui.validation.invalid', { attribute: 'ISBN' }) : undefined;
                                 },
                             }}

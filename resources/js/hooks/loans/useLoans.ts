@@ -3,17 +3,18 @@ import axios from "../../lib/axios";
 
 export interface Loan {
   id: string;
-  user_id: string;
-  user_email:string;
   book_id: string;
+  user_email: string;
   book_title: string;
-  due_date: string;
-  is_active: boolean;
+  user_id: string;
   is_late: boolean;
+  is_active: boolean;
   created_at: string;
-  updated_at: string;
+  return_date: string;
+  due_date: string;
 }
 
+// Interface representing the actual API response structure
 export interface ApiPaginatedResponse<T> {
   current_page: number;
   data: T[];
@@ -34,6 +35,7 @@ export interface ApiPaginatedResponse<T> {
   total: number;
 }
 
+// Interface representing the expected format for the Table component
 export interface PaginatedResponse<T> {
   data: T[];
   meta: {
@@ -47,12 +49,13 @@ export interface PaginatedResponse<T> {
 }
 
 interface UseLoanParams {
-  search?: any[]; // Definir los filtros posibles con claves como "user_id", "book_id", etc.
+  search?: any[];
   page?: number;
   perPage?: number;
 }
 
 export function useLoans({ search, page = 1, perPage = 10 }: UseLoanParams = {}) {
+    console.log(search);
   return useQuery({
     queryKey: ["loans", { search, page, perPage }],
     queryFn: async () => {
@@ -68,6 +71,7 @@ export function useLoans({ search, page = 1, perPage = 10 }: UseLoanParams = {})
         }
       });
 
+      // Transform the API response to the expected format
       return {
         data: apiResponse.data,
         meta: {
@@ -83,10 +87,11 @@ export function useLoans({ search, page = 1, perPage = 10 }: UseLoanParams = {})
   });
 }
 
-export function useCreateLoan() {
+
+export function useUpdateLoan(loanId: string) {
   return useMutation({
-    mutationFn: async (data: { user_id: string; book_id: string; due_date: string }) => {
-      const response = await axios.post("/api/loans", data, {
+    mutationFn: async (data: { id:string, book_id:string, user_id:string, is_overdue:boolean, is_active:boolean, created_at:string, returned_at:string, due_date:string }) => {
+      const response = await axios.put(`/api/loans/${loanId}`, data, {
         headers: {
           'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest'
@@ -96,18 +101,10 @@ export function useCreateLoan() {
     },
   });
 }
-
-export function useUpdateLoan(loanId: string) {
+export function useReturnLoan() {
   return useMutation({
-    mutationFn: async (data: {
-      user_id: string;
-      user_email:string;
-      book_id: string;
-      due_date: string;
-      is_active?: boolean;
-      is_late?: boolean;
-    }) => {
-      const response = await axios.put(`/api/loans/${loanId}`, data, {
+    mutationFn: async (loanId: string) => {
+      const response = await axios.put(`/api/loans/${loanId}/return`, {}, {
         headers: {
           'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest'
