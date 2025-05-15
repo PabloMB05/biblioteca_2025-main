@@ -85,6 +85,7 @@ export default function FloorsIndex() {
           </Link>
           <DeleteDialog
             id={floor.id}
+            successMessage={t('messages.floors.deleted')}
             onDelete={handleDeleteFloor}
             title={t("ui.floors.delete.title") || "Delete floor"}
             description={t("ui.floors.delete.description") || "Are you sure you want to delete this floor? This action cannot be undone."}

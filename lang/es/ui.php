@@ -42,12 +42,16 @@ return [
     ],
     'reservations' => [
         'title' => 'Reservas',
+        'no_results'=> 'No hay resultados de reservas',
         'filters' => [
             'book' => 'Título del libro',
             'email' => 'Correo del usuario',
             'queue' => 'Posición en cola',
         ],
         'utils'=> [
+            'select_email'=> 'Selecciona un email de usuario',
+            'required_fileds'=> 'Email de usuario obligatorio',
+            'search_email'=> 'Busca Email',
             'title' => 'Formulario de Reserva',
             'description'=> 'Rellena los campos para completar la reserva del libro',
             'book'=> 'Nombre del libro',
@@ -73,6 +77,7 @@ return [
     ],
     'loans' => [
         'title' => 'Préstamos',
+        'no_results'=> 'No hay resultados de préstamos',
         'buttons' => [
             'new' => 'Nuevo Préstamo',
         ],
@@ -104,11 +109,36 @@ return [
             'finished' => 'Finalizado',
             'returned' => 'Devuelto el: ',
             'days' => 'días',
-            'remaining' => 'Restante',
+            'remaining' => 'Restantes',
+            'minutes'=> 'Minutos',
+            'hours' => 'Horas ',
+            'overdue'=> 'Pasadas'
+
         ],
+        'fields'=> [
+            'book'=> 'Libro',
+            'user'=> 'Email del usuario',
+            'duedate' => 'Fecha de devolución',
+        ],
+        'cards' => [
+            'create' => [
+                'title' => 'Crear préstamo',
+                'description' => 'Complete los datos para registrar un nuevo préstamo',
+            ],
+        ],
+    'placeholders' => [
+        'user' => 'Seleccionar usuario',
     ],
-    'common' => [
+    'buttons' => [
+        'cancel' => 'Cancelar',
+        'save' => 'Guardar'
+    ],
+    ],
+    'common' => [            
+
+
         'filters' => [
+
             'results' => 'Resultados',
         ],
     ],
@@ -204,6 +234,7 @@ return [
     'validation' => [
         'required' => 'El campo :attribute es obligatorio.',
         'email' => 'El campo :attribute debe ser una dirección de correo válida.',
+        'validating'=> 'Validando',
         'min' => [
             'string' => 'El campo :attribute debe tener al menos :min caracteres.',
         ],
@@ -240,6 +271,11 @@ return [
         'title' => 'Pisos',
         'create' => 'Crear Piso',
         'edit_title' => 'Editar Piso',
+        'delete' => [
+            'title' => 'Piso eliminado',
+            'description' => '¿Estás seguro de que deseas eliminar este piso? Esta acción no se puede deshacer.',
+        ],
+
         'buttons' => [
             'new' => 'Nuevo Piso',
         ],
@@ -247,6 +283,8 @@ return [
     'bookcases' => [
         'title' => 'Estanterías',
         'total' => 'Estanterías Registradas',
+        'no_results'=> 'No hay resultados de estanterías',        
+        'edit'=> 'Edición de Estantería',
         "cards" => [
             "create" => [
                 "title" => "Crear estantería",
@@ -281,7 +319,7 @@ return [
         'columns' => [
             'bookcase' => 'Número de estantería',
             'capacity' => 'Capacidad',
-            'floor' => 'Número de piso',
+            'floor' => 'piso',
             'zone' => 'Número de zona',
             'zoneGenre' => 'Género',
             'created_at' => 'Creado el',
@@ -298,10 +336,20 @@ return [
             'bookcase' => 'Ingrese una estantería...',
             'capacity' => 'Ingrese capacidad...'
         ],
+        'delete'[
+            'title' => 'Eliminar estantería',
+            'description' => '¿Estás seguro de que deseas eliminar esta estantería? Esta acción no se puede deshacer.',
+        ],
     ],
     'zones' => [
         'title' => 'Zonas',
+        'number'=> 'Número de la zona',
         'total' => 'Zonas Registradas',
+        'capacity'=> 'Capacidad',
+        'floor_label'=> 'Piso',
+        'floor'=> 'Piso de la zona',
+        'genre'=> 'Género de la zona',
+
         "cards" => [
             "create" => [
                 "title" => "Crear Zona",
@@ -346,6 +394,7 @@ return [
             'capacity_integer' => 'La capacidad debe ser un número',
             'capacity_min' => 'La capacidad debe ser al menos :min',
         ],
+        
     ],
     'users' => [
         'total' => 'Usuarios Registrados',
@@ -377,7 +426,7 @@ return [
             'reports' => 'Reportes',
             'configurations' => 'Configuración',
         ],
-        'permissions' => [
+        'permisos' => [
             'Users' => [
                 'users' => [
                     'view' => 'Ver usuarios',
@@ -408,6 +457,7 @@ return [
                 ],
             ],
         ],
+
         'roles' => [
             'default' => 'Seleccione un Rol',
             'admin' => 'Administrador',
@@ -482,6 +532,11 @@ return [
             'floor_number' => 'Número de piso',
             'capacity' => 'Cantidad de capacidad',
         ],
+        'delete' => [
+            'title' => 'Piso eliminado',
+            'description' => '¿Estás seguro de que deseas eliminar este piso? Esta acción no se puede deshacer.',
+        ],
+
     ],
     'floor' => [
         'create' => 'Crear Piso',
@@ -499,6 +554,7 @@ return [
             'capacity_required' => 'La capacidad es requerida',
             'capacity_integer' => 'La capacidad debe ser un número',
             'capacity_min' => 'La capacidad debe ser al menos :min',
+            
         ],
         'messages' => [
             'created' => 'Piso creado exitosamente',
@@ -607,6 +663,10 @@ return [
                     'modify' => 'Modificar configuración'
                 ],
             ],
+            'delete'=>[
+                'title' => 'Eliminar libro',
+                'description' => '¿Estás seguro de que deseas eliminar este libro? Esta acción no se puede deshacer.',
+            ],
         ],
         'roles' => [
             'default' => 'Seleccione un Rol',
@@ -630,6 +690,7 @@ return [
         ],
         'tabs' => [
             'userForm' => 'Información Básica',
+            'bookinfo'=> 'Información del libro',
             'permissionsForm' => 'Roles y Permisos'
         ],
         'cards' => [
@@ -692,6 +753,10 @@ return [
             'zone' => 'Número de zona',
             'bookcase'=> 'Número de estantería',
         ],
+        'tabs'=>[
+            'bookInfo'=> 'Información del libro',
+            'location'=> 'Ubicación',
+        ],
         'columns' => [
             'title' => 'Título',
             'genres' => 'Género',
@@ -717,6 +782,7 @@ return [
             "zone" => "Zona: ",
             "bookcases" => "Estantería",
             "bookcase" => "Estantería: "
+            "publisher"=> "Editorial",
         ],
         "placeholders" => [
             "title" => "Ingrese el título del libro",
@@ -788,5 +854,28 @@ return [
             'canceled_reserv' => 'Reserva cancelada',
         ],
     ],
-
+    'genres' => [
+    'label' => [
+        'Fantasy' => 'Fantasía',
+        'Drama' => 'Drama',
+        'Historical' => 'Histórico',
+        'Science Fiction' => 'Ciencia ficción',
+        'Horror' => 'Terror',
+        'Mystery' => 'Misterio',
+        'Thriller' => 'Suspenso',
+        'Romance' => 'Romance',
+        'Adventure' => 'Aventura',
+        'Dystopian' => 'Distopía',
+        'Gothic' => 'Gótico',
+        'Magical Realism' => 'Realismo mágico',
+        'Satire' => 'Sátira',
+        'Comedy' => 'Comedia',
+        'Tragedy' => 'Tragedia',
+        'Crime Fiction' => 'Novela negra',
+        'Mythology' => 'Mitología',
+        'Western' => 'Western',
+        'Cyberpunk' => 'Cyberpunk',
+        'Poetry' => 'Poesía',
+        ],
+    ],
 ];

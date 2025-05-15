@@ -38,12 +38,16 @@ return [
 
     'reservations' => [
         'title' => 'Reservations',
+        'no_results'=> 'No results resarvations',
         'filters' => [
             'book' => 'Book title',
             'email' => 'User email',
             'queue' => 'Queue Position',
         ],
         'utils' => [
+            'select_email'=> 'Select User Email',
+            'required_fields'=> 'User Email is required',
+            'search_email'=> 'Search Email',
             'title' => 'Reservation Form',
             'description' => 'Fill in the fields to complete the book reservation',
             'book' => 'Book Title',
@@ -75,7 +79,7 @@ return [
     ],
     'loans' => [
         'title' => 'Loans',
-
+        'no_results'=> 'No results',
         'buttons' => [
             'new' => 'New Loan',
         ],
@@ -108,7 +112,11 @@ return [
             'returned' => 'Returned on: ',
             'days' => 'days',
             'remaining' => 'Remaining',
+            'minutes' => 'Minutes',
+            'hours' => 'Hours',
+            'overdue' => 'Overdue'
         ],
+
         'cards' => [
             'create'=> [
                 'title' => 'Create Loan',
@@ -276,6 +284,8 @@ return [
     ],
     'bookcases' => [
         'title' => 'Bookcases',
+        'no_results'=> 'There are no results for shelves',
+        'total'=> 'Total Bookcases',
         "cards" => [
             "create" => [
                 "title" => "Create bookcase",
@@ -327,9 +337,21 @@ return [
             'bookcase' => 'Enter a bookcase...',
             'capacity' => 'Enter capacity...'
         ],
+        'delete'=>[
+            'title' => 'Delete Bookcase',
+            'description' => 'Are you sure you want to delete this bookcase? This action cannot be undone.',
+        ],
     ],
     'zones' => [
+        'total'=> 'Total Zones',
         'title' => 'Zones',
+        'number' => 'Zone Number',
+        'capacity'=> 'Zone Capacity',
+        'floor'=> 'Floor Number',
+        'genre'=> 'Zone Genre',
+        'select_floor'=> 'Select Floor',
+        'floor_label'=> 'Floor Capacity',
+        'select_genre'=> 'Select Genre',
         "cards" => [
             "create" => [
                 "title" => "Create Zone",
@@ -355,7 +377,7 @@ return [
             'number' => 'Zone Number',
             'capacity' => 'Capacity',
             'genre' => 'Genre',
-            'created_ad' => 'Created at',
+            'created_at' => 'Created at',
             'actions' => 'Actions'
         ],
         'fields' => [
@@ -374,6 +396,10 @@ return [
             'capacity_integer' => 'The capacity must be a number',
             'capacity_min' => 'The capacity must be at least :min',
         ],
+        'delete'=>[
+            'title'=> 'Zone Delete',
+            'description'=> '¿Are you sure you want to block this zone?'
+        ]
     ],
     'users' => [
         'title' => 'Users',
@@ -404,7 +430,7 @@ return [
             'reports' => 'Reports',
             'configurations' => 'Configuration',
         ],
-        'permissions' => [
+        'permisos' => [
             'Users' => [
                 'users' => [
                     'view' => 'View users',
@@ -435,6 +461,8 @@ return [
                 ],
             ],
         ],
+
+        
         'roles' => [
             'default' => 'Select a Role',
             'admin' => 'Administrator',
@@ -491,6 +519,7 @@ return [
     ],
     'floors' => [
         'title' => 'Floors',
+        'total'=> 'Registered floors',
         'filters' => [
             'floor_number' => 'Search by title',
             'capacity' => 'Search by capacity',
@@ -507,6 +536,11 @@ return [
         'placeholders' => [
             'floor_number' => 'Floor number',
             'capacity' => 'Capacity quantity',
+        ],
+        'delete'=>[
+            'title'=> 'Deleted Floor',
+            'description'=> 'Are you sure you want to delete this floor? This action cannot be undone.',
+
         ],
     ],
     'floor' => [
@@ -633,6 +667,10 @@ return [
                     'modify' => 'Modify configuration'
                 ],
             ],
+            'delete'=>[
+                'title' => 'Delete Book',
+                'description' => 'Are you sure you want to delete this book? This action cannot be undone.',
+            ],
         ],
         'roles' => [
             'default' => 'Select a Role',
@@ -742,7 +780,8 @@ return [
             "zones" => "Zone",
             "zone" => "Zone: ",
             "bookcases" => "Bookcase",
-            "bookcase" => "Bookcase: "
+            "bookcase" => "Bookcase: ",
+            "publisher"=> "publisher",
         ],
         "placeholders" => [
             "title" => "Enter the book title",
@@ -821,4 +860,6 @@ return [
             'canceled_reserv' => 'canceled reservation',
         ],
     ],
+    
+    
 ];

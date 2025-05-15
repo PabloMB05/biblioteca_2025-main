@@ -111,6 +111,7 @@ export default function BookcasesIndex() {
                             </Link>
                             <DeleteDialog
                                 id={bookcase.id}
+                                successMessage={t('messages.bookcases.deleted')}
                                 onDelete={handleDeleteBookcase}
                                 title={t('ui.bookcases.delete.title') || 'Delete bookcase'}
                                 description={
@@ -196,10 +197,7 @@ export default function BookcasesIndex() {
                             <TableSkeleton columns={10} rows={10} />
                         ) : isError ? (
                             <div className="p-4 text-center">
-                                <div className="mb-4 text-red-500">{t('ui.bookcases.error_loading')}</div>
-                                <Button onClick={() => refetch()} variant="outline">
-                                    {t('ui.bookcases.buttons.retry')}
-                                </Button>
+                                <div className="mb-4 text-red-500">{t('ui.bookcases.no_results')}</div>
                             </div>
                         ) : (
                             <div>

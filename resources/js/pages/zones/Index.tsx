@@ -92,6 +92,7 @@ export default function ZonesIndex() {
             id={zone.id}
             onDelete={handleDeleteZone}
             title={t("ui.zones.delete.title") || "Delete zone"}
+            successMessage={t('messages.zones.deleted')}
             description={t("ui.zones.delete.description") || "Are you sure you want to delete this zone? This action cannot be undone."}
             trigger={
               <Button variant="outline" size="icon" className="text-destructive hover:text-destructive" title={t("ui.zones.buttons.delete") || "Delete zone"}>

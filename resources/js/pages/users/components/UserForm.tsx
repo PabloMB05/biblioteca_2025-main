@@ -30,7 +30,6 @@ interface UserFormProps {
     permisosDelUsuario?: string[];
 }
 
-// Field error display component
 function FieldInfo({ field }: { field: AnyFieldApi }) {
     return (
         <>
@@ -73,7 +72,6 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
         }
     }, [permisosDelUsuario]);
 
-    // TanStack Form setup
     const form = useForm({
         defaultValues: {
             name: initialData?.name ?? '',
@@ -87,13 +85,8 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
             };
 
             const options = {
-                // preserveState:true,
                 onSuccess: () => {
-                    console.log('Usuario creado con éxito.');
-
                     queryClient.invalidateQueries({ queryKey: ['users'] });
-
-                    // Construct URL with page parameters
                     let url = '/users';
                     if (page) {
                         url += `?page=${page}`;
@@ -101,7 +94,6 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
                             url += `&per_page=${perPage}`;
                         }
                     }
-
                     router.visit(url);
                 },
                 onError: (errors: Record<string, string>) => {
@@ -111,7 +103,6 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
                 },
             };
 
-            // Submit with Inertia
             if (initialData) {
                 router.put(`/users/${initialData.id}`, userData, options);
             } else {
@@ -120,8 +111,6 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
         },
     });
 
-    // Manejador de dependencias
-
     function comprobadorDependencias(permiso: string, parent: string) {
         if (permiso == 'users.view' || permiso == 'products.view' || permiso == 'reports.view' || permiso == 'config.access') {
             return false;
@@ -129,8 +118,6 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
             return !permisosUsuarioFinal.includes(parent);
         }
     }
-
-    // Manejador de checkboxes
 
     function togglePermiso(permiso: string) {
         if (permisosUsuarioFinal.includes(permiso)) {
@@ -160,20 +147,15 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
         }
     }
 
-    // Manejador del select
-
     function roleSelector(role: string) {
         const permisosDelRol = rolesConPermisos[role];
-
         permisosUsuarioFinal = [];
         setArrayPermisosState(permisosUsuarioFinal);
-
         permisosDelRol.forEach((permiso) => {
             togglePermiso(permiso);
         });
     }
 
-    // Form submission handler
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         e.stopPropagation();
@@ -181,12 +163,11 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
     };
 
     const [showPassword, setShowPassword] = useState(false);
-
     const accesoPermisos = false;
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-            <div>
+        <form onSubmit={handleSubmit} className="space-y-4 max-w-6xl mx-auto" noValidate>
+            <div className="bg-white rounded-lg shadow-sm p-6">
                 <Tabs defaultValue="userForm">
                     <TabsList className="w-full">
                         <TabsTrigger value="userForm" className="w-1/2">
@@ -196,90 +177,95 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
                             {t('ui.users.tabs.permissionsForm')}
                         </TabsTrigger>
                     </TabsList>
-                    <Separator />
+                    <Separator className="my-4" />
                     <TabsContent value="userForm" className="w-full">
-                        {/* Name field */}
-                        <div>
-                            <form.Field
-                                name="name"
-                                validators={{
-                                    onChangeAsync: async ({ value }) => {
-                                        await new Promise((resolve) => setTimeout(resolve, 500));
-                                        return !value
-                                            ? t('ui.validation.required', { attribute: t('ui.users.fields.name').toLowerCase() })
-                                            : value.length < 2
-                                              ? t('ui.validation.min.string', { attribute: t('ui.users.fields.name').toLowerCase(), min: '2' })
-                                              : undefined;
-                                    },
-                                }}
-                            >
-                                {(field) => (
-                                    <>
-                                        <Label htmlFor={field.name}>
-                                            <div className="mb-1 flex items-center gap-1">
-                                                <User color="grey" size={18} />
-                                                {t('ui.users.fields.name')}
-                                            </div>
-                                        </Label>
-                                        <Input
-                                            id={field.name}
-                                            name={field.name}
-                                            value={field.state.value}
-                                            onChange={(e) => field.handleChange(e.target.value)}
-                                            onBlur={field.handleBlur}
-                                            placeholder={t('ui.users.placeholders.name')}
-                                            disabled={form.state.isSubmitting}
-                                            required={false}
-                                            autoComplete="off"
-                                        />
-                                        <FieldInfo field={field} />
-                                    </>
-                                )}
-                            </form.Field>
-                        </div>
-                        {/* Email field */}
-                        <div>
-                            <form.Field
-                                name="email"
-                                validators={{
-                                    onChangeAsync: async ({ value }) => {
-                                        await new Promise((resolve) => setTimeout(resolve, 500));
-                                        return !value
-                                            ? t('ui.validation.required', { attribute: t('ui.users.fields.email').toLowerCase() })
-                                            : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-                                              ? t('ui.validation.email', { attribute: t('ui.users.fields.email').toLowerCase() })
-                                              : undefined;
-                                    },
-                                }}
-                            >
-                                {(field) => (
-                                    <>
-                                        <Label htmlFor={field.name}>
-                                            <div className="mb-1 flex items-center gap-1">
-                                                <Mail color="grey" size={18} />
-                                                {t('ui.users.fields.email')}
-                                            </div>
-                                        </Label>
-                                        <Input
-                                            id={field.name}
-                                            name={field.name}
-                                            type="text"
-                                            value={field.state.value}
-                                            onChange={(e) => field.handleChange(e.target.value)}
-                                            onBlur={field.handleBlur}
-                                            placeholder={t('ui.users.placeholders.email')}
-                                            disabled={form.state.isSubmitting}
-                                            required={false}
-                                            autoComplete="off"
-                                        />
-                                        <FieldInfo field={field} />
-                                    </>
-                                )}
-                            </form.Field>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Name field */}
+                            <div className="col-span-1">
+                                <form.Field
+                                    name="name"
+                                    validators={{
+                                        onChangeAsync: async ({ value }) => {
+                                            await new Promise((resolve) => setTimeout(resolve, 500));
+                                            return !value
+                                                ? t('ui.validation.required', { attribute: t('ui.users.fields.name').toLowerCase() })
+                                                : value.length < 2
+                                                  ? t('ui.validation.min.string', { attribute: t('ui.users.fields.name').toLowerCase(), min: '2' })
+                                                  : undefined;
+                                        },
+                                    }}
+                                >
+                                    {(field) => (
+                                        <>
+                                            <Label htmlFor={field.name}>
+                                                <div className="mb-1 flex items-center gap-1">
+                                                    <User color="grey" size={18} />
+                                                    {t('ui.users.fields.name')}
+                                                </div>
+                                            </Label>
+                                            <Input
+                                                id={field.name}
+                                                name={field.name}
+                                                value={field.state.value}
+                                                onChange={(e) => field.handleChange(e.target.value)}
+                                                onBlur={field.handleBlur}
+                                                placeholder={t('ui.users.placeholders.name')}
+                                                disabled={form.state.isSubmitting}
+                                                required={false}
+                                                autoComplete="off"
+                                                className="w-full"
+                                            />
+                                            <FieldInfo field={field} />
+                                        </>
+                                    )}
+                                </form.Field>
+                            </div>
+                            
+                            {/* Email field */}
+                            <div className="col-span-1">
+                                <form.Field
+                                    name="email"
+                                    validators={{
+                                        onChangeAsync: async ({ value }) => {
+                                            await new Promise((resolve) => setTimeout(resolve, 500));
+                                            return !value
+                                                ? t('ui.validation.required', { attribute: t('ui.users.fields.email').toLowerCase() })
+                                                : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+                                                  ? t('ui.validation.email', { attribute: t('ui.users.fields.email').toLowerCase() })
+                                                  : undefined;
+                                        },
+                                    }}
+                                >
+                                    {(field) => (
+                                        <>
+                                            <Label htmlFor={field.name}>
+                                                <div className="mb-1 flex items-center gap-1">
+                                                    <Mail color="grey" size={18} />
+                                                    {t('ui.users.fields.email')}
+                                                </div>
+                                            </Label>
+                                            <Input
+                                                id={field.name}
+                                                name={field.name}
+                                                type="text"
+                                                value={field.state.value}
+                                                onChange={(e) => field.handleChange(e.target.value)}
+                                                onBlur={field.handleBlur}
+                                                placeholder={t('ui.users.placeholders.email')}
+                                                disabled={form.state.isSubmitting}
+                                                required={false}
+                                                autoComplete="off"
+                                                className="w-full"
+                                            />
+                                            <FieldInfo field={field} />
+                                        </>
+                                    )}
+                                </form.Field>
+                            </div>
                         </div>
 
-                        {/* Password field */}
-                        <div>
+                        {/* Password field - full width */}
+                        <div className="mt-4 w-full">
                             <form.Field
                                 name="password"
                                 validators={{
@@ -308,7 +294,6 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
                                                 </div>
                                             </Label>
 
-                                            {/* Input and Toggle Wrapper */}
                                             <div className="relative w-full">
                                                 <Input
                                                     id={field.name}
@@ -321,10 +306,9 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
                                                     disabled={form.state.isSubmitting}
                                                     autoComplete="off"
                                                     required={false}
-                                                    className="pr-10"
+                                                    className="pr-10 w-full"
                                                 />
 
-                                                {/* Visibility Toggle Button */}
                                                 <button
                                                     type="button"
                                                     onClick={() => setShowPassword(!showPassword)}
@@ -345,87 +329,80 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
                     </TabsContent>
                     <TabsContent value="permissionsForm" className="w-full">
                         {/* Pre-selections field */}
-                        <div>
-                            <Label>
-                                <div className="mb-1 flex items-center gap-1">
-                                    <Shield color="grey" size={18} />
-                                    {t('ui.users.fields.rolPpal')}
-                                </div>
-                            </Label>
-                            <Select onValueChange={(value) => roleSelector(value)}>
-                                <SelectTrigger className="w-full">
-                                    <SelectValue placeholder={t('ui.users.roles.default')} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {/* <SelectItem value="default">{t('ui.users.roles.default')}</SelectItem> */}
-                                    {roles?.map((role) => (
-                                        <SelectItem key={String(role)} value={String(role)}>
-                                            {t('ui.users.roles.' + role)}
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <div className="mt-3 mb-3">
-                                <Separator />
+                        <div className="space-y-4">
+                            <div>
+                                <Label>
+                                    <div className="mb-1 flex items-center gap-1">
+                                        <Shield color="grey" size={18} />
+                                        {t('ui.users.fields.rolPpal')}
+                                    </div>
+                                </Label>
+                                <Select onValueChange={(value) => roleSelector(value)}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder={t('ui.users.roles.default')} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {roles?.map((role) => (
+                                            <SelectItem key={String(role)} value={String(role)}>
+                                                {t('ui.users.roles.' + role)}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
+                            
+                            <Separator className="my-4" />
 
                             {/* Permisos Especificos */}
+                            <div>
+                                <div className="mb-4 flex items-center gap-1">
+                                    <Shield color="#2762c2" size={18} />
+                                    <span className="font-medium">{t('ui.users.fields.permisos')}</span>
+                                </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {categorias.map((categoria) => {
+                                        const permisosCat = permisosAgrupados[categoria.perms];
+                                        const permisoPadre = permisosCat[0];
+                                        const catKey = categoria.icon;
+                                        const Icono = iconComponents[catKey as keyof typeof iconComponents];
 
-                            <div className="mt-3 mb-1 flex items-center gap-1">
-                                <Shield color="#2762c2" size={18} />
-                                {t('ui.users.fields.permisos')}
-                            </div>
-                            <div className="mt-2 flex grid grid-cols-2 gap-4">
-                                {categorias.map((categoria) => {
-                                    const permisosCat = permisosAgrupados[categoria.perms];
-                                    const permisoPadre = permisosCat[0];
-
-                                    const catKey = categoria.icon;
-
-                                    const Icono = iconComponents[catKey as keyof typeof iconComponents];
-
-                                    return (
-                                        <Card className="grow" key={categoria.id}>
-                                            <CardHeader>
-                                                <div className="flex gap-1">
-                                                    <Icono size={18} color="blue" />
-                                                    <CardTitle>{t('ui.users.gridelements.' + categoria.label)}</CardTitle>
-                                                </div>
-                                            </CardHeader>
-                                            <CardContent>
-                                                {permisosCat.map((permiso) => (
-                                                    <div className="items-top flex space-x-2" key={String(permiso)}>
-                                                        <Checkbox
-                                                            className="border-blue-500"
-                                                            id={String(permiso)}
-                                                            value={String(permiso)}
-                                                            checked={arrayPermisosState.includes(permiso)}
-                                                            onCheckedChange={() => {
-                                                                togglePermiso(permiso);
-                                                            }}
-                                                            disabled={comprobadorDependencias(permiso, permisoPadre)}
-                                                        />
-                                                        <div className="m-1 grid gap-1.5 leading-none">
-                                                            <label
-                                                                htmlFor={String(permiso)}
-                                                                className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                                            >
-                                                                {t('ui.users.permisos.' + categoria.icon + '.' + permiso)}
-                                                            </label>
-                                                        </div>
+                                        return (
+                                            <Card className="h-full" key={categoria.id}>
+                                                <CardHeader className="pb-3">
+                                                    <div className="flex items-center gap-2">
+                                                        <Icono size={18} color="#2762c2" />
+                                                        <CardTitle className="text-base">
+                                                            {t('ui.users.gridelements.' + categoria.label)}
+                                                        </CardTitle>
                                                     </div>
-                                                ))}
-                                            </CardContent>
-                                        </Card>
-                                    );
-                                })}
+                                                </CardHeader>
+                                                <CardContent className="space-y-3">
+                                                    {permisosCat.map((permiso) => (
+                                                        <div className="flex items-center space-x-2" key={String(permiso)}>
+                                                            <Checkbox
+                                                                id={String(permiso)}
+                                                                checked={arrayPermisosState.includes(permiso)}
+                                                                onCheckedChange={() => togglePermiso(permiso)}
+                                                                disabled={comprobadorDependencias(permiso, permisoPadre)}
+                                                                className="border-blue-500"
+                                                            />
+                                                            <Label htmlFor={String(permiso)} className="text-sm font-normal">
+                                                                {t('ui.users.permisos.' + categoria.icon + '.' + permiso)}
+                                                            </Label>
+                                                        </div>
+                                                    ))}
+                                                </CardContent>
+                                            </Card>
+                                        );
+                                    })}
+                                </div>
                             </div>
                         </div>
                     </TabsContent>
                 </Tabs>
-                <Separator className="mt-3" />
+                <Separator className="my-6" />
                 {/* Form buttons */}
-                <div className="mt-3 mt-4 flex justify-center gap-100">
+                <div className="flex justify-end gap-4">
                     <Button
                         type="button"
                         variant="outline"
@@ -440,15 +417,16 @@ export function UserForm({ initialData, page, perPage, roles, rolesConPermisos, 
                             router.visit(url);
                         }}
                         disabled={form.state.isSubmitting}
+                        className="min-w-[120px]"
                     >
-                        <X />
+                        <X className="mr-2 h-4 w-4" />
                         {t('ui.users.buttons.cancel')}
                     </Button>
 
                     <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
                         {([canSubmit, isSubmitting]) => (
-                            <Button type="submit" disabled={!canSubmit}>
-                                <Save />
+                            <Button type="submit" disabled={!canSubmit} className="min-w-[120px]">
+                                <Save className="mr-2 h-4 w-4" />
                                 {isSubmitting
                                     ? t('ui.users.buttons.saving')
                                     : initialData

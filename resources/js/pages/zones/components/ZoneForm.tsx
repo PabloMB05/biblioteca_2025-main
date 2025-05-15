@@ -8,7 +8,7 @@ import { router } from '@inertiajs/react';
 import type { AnyFieldApi } from '@tanstack/react-form';
 import { useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
-import { MapPin, Save, X } from 'lucide-react';
+import { MapPin, Save, X,Check, ChevronsUpDown } from 'lucide-react';
 import { FormEvent } from 'react';
 import { toast } from 'sonner';
 import {
@@ -18,6 +18,20 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 
 interface ZoneFormProps {
@@ -261,7 +275,7 @@ console.log(floors);
                       ) : (
                         floors.map((floor) => (
                           <SelectItem key={floor.id} value={floor.id} disabled={floor.zones_count >= floor.capacity}>
-                            {`${t('ui.floor.label')} ${floor.floor_number} `} -- {floor.zones_count}/{floor.capacity}
+                            {`${t('ui.zones.floor_label')} ${floor.floor_number} `} -- {floor.zones_count}/{floor.capacity}
                           </SelectItem>
                         ))
                       )}
@@ -289,33 +303,66 @@ console.log(floors);
                   <Label>
                     {t('ui.zones.genre')}
                   </Label>
-                  <Select
-                    value={field.state.value}
-                    onValueChange={field.handleChange}
-                    disabled={form.state.isSubmitting}
+                  <Popover
+                    open={field.state.active}
+                    onOpenChange={(open) => {
+                      // Optional: Update based on form state if needed
+                    }}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder={t('ui.zones.select_genre')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {isLoadingFloors ? (
-                        <SelectItem value="loading" disabled>
-                          {t('ui.common.loading')}
-                        </SelectItem>
-                      ) : (
-                        genres.map((genre) => (
-                          <SelectItem key={genre.id} value={genre.name}>
-                            {genre.name || `${t('ui.genres.label')} ${genre.name}`}
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={field.state.active}
+                        className="w-full justify-between"
+                        type="button"
+                      >
+                        {field.state.value
+                          ? t(`ui.genres.names.${field.state.value}`)
+                          : t('ui.zones.select_genre')}
+                        <ChevronsUpDown className="opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-full p-0">
+                      <Command>
+                        <CommandInput placeholder={t('ui.zones.select_genre')} className="h-9" />
+                        <CommandList>
+                          <CommandEmpty>{t('ui.common.no_results')}</CommandEmpty>
+                          <CommandGroup>
+                            {isLoadingFloors ? (
+                              <CommandItem value="loading" disabled>
+                                {t('ui.common.loading')}
+                              </CommandItem>
+                            ) : (
+                              genres.map((genre) => (
+                                <CommandItem
+                                  key={genre.id}
+                                  value={genre.name}
+                                  onSelect={(currentValue) => {
+                                    field.handleChange(currentValue === field.state.value ? '' : currentValue)
+                                  }}
+                                >
+                                  {t(`ui.genres.names.${genre.name}`)}
+                                  <Check
+                                    className={cn(
+                                      "ml-auto",
+                                      field.state.value === genre.name ? "opacity-100" : "opacity-0"
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))
+                            )}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                   <FieldError field={field} />
                 </>
               )}
             </form.Field>
           </div>
+
 
           <Separator className="my-4" />
 
@@ -330,7 +377,7 @@ console.log(floors);
               disabled={form.state.isSubmitting}
             >
               <X className="mr-2 h-4 w-4" />
-              {t('ui.common.cancel')}
+              {t('ui.buttons.cancel')}
             </Button>
 
             <form.Subscribe selector={(state) => [state.canSubmit, state.isSubmitting]}>
@@ -343,8 +390,8 @@ console.log(floors);
                   {isSubmitting
                     ? t('ui.common.saving')
                     : initialData
-                      ? t('ui.common.update')
-                      : t('ui.common.save')}
+                      ? t('ui.buttons.update')
+                      : t('ui.buttons.save')}
                 </Button>
               )}
             </form.Subscribe>

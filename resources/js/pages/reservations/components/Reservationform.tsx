@@ -11,7 +11,20 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Book, Calendar, Save, User, X } from 'lucide-react';
 import { FormEvent } from 'react';
 import { toast } from 'sonner';
-
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 interface ReservationFormProps {
     initialData?: {
         id: string;
@@ -145,46 +158,82 @@ export function ReservationForm({
                         </form.Field>
                     </div>
 
-                    {/* User selection */}
+                   {/* User selection */}
                     <div>
-                        <form.Field
-                            name="user_id"
-                            validators={{
-                                onChangeAsync: async ({ value }) => {
-                                    await new Promise((resolve) => setTimeout(resolve, 500));
-                                    return !value
-                                        ? t('ui.validation.required', { attribute: t('ui.reservation.user').toLowerCase() })
-                                        : undefined;
-                                },
-                            }}
-                        >
-                            {(field) => (
-                                <>
-                                    <Label htmlFor={field.name}>
-                                        {t('ui.reservation.user')}
-                                    </Label>
-                                    <select
-                                        id={field.name}
-                                        name={field.name}
-                                        value={field.state.value}
-                                        onChange={(e) => field.handleChange(e.target.value)}
-                                        onBlur={field.handleBlur}
-                                        disabled={form.state.isSubmitting}
-                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                        required
-                                    >
-                                        <option value="">{t('ui.reservation.select_user')}</option>
-                                        {users.map((user) => (
-                                            <option key={user.id} value={user.id}>
-                                                {user.email}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <FieldInfo field={field} />
-                                </>
-                            )}
-                        </form.Field>
+                    <form.Field
+                        name="user_id"
+                        validators={{
+                        onChangeAsync: async ({ value }) => {
+                            await new Promise((resolve) => setTimeout(resolve, 500));
+                            return !value
+                            ? t('ui.validation.required', { attribute: t('ui.reservation.user').toLowerCase() })
+                            : undefined;
+                        },
+                        }}
+                    >
+                        {(field) => (
+                        <>
+                            <Label htmlFor={field.name}>
+                            {t('ui.reservation.user')}
+                            </Label>
+                            <Popover
+                            open={field.state.active}
+                            onOpenChange={() => {}}
+                            >
+                            <PopoverTrigger asChild>
+                                <Button
+                                variant="outline"
+                                role="combobox"
+                                aria-expanded={field.state.active}
+                                className="w-full justify-between"
+                                type="button"
+                                >
+                                {field.state.value
+                                    ? users.find((u) => u.id === field.state.value)?.email
+                                    : t('ui.reservation.select_user')}
+                                <ChevronsUpDown className="opacity-50 ml-2 h-4 w-4" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-full p-0">
+                                <Command>
+                                <CommandInput placeholder={t('ui.reservation.select_user')} className="h-9" />
+                                <CommandList>
+                                    <CommandEmpty>{t('ui.common.no_results')}</CommandEmpty>
+                                    <CommandGroup>
+                                    {isLoadingUsers ? (
+                                        <CommandItem value="loading" disabled>
+                                        {t('ui.common.loading')}
+                                        </CommandItem>
+                                    ) : (
+                                        users.map((user) => (
+                                        <CommandItem
+                                            key={user.id}
+                                            value={user.id}
+                                            onSelect={() => {
+                                            field.handleChange(user.id)
+                                            }}
+                                        >
+                                            {user.email}
+                                            <Check
+                                            className={cn(
+                                                "ml-auto",
+                                                field.state.value === user.id ? "opacity-100" : "opacity-0"
+                                            )}
+                                            />
+                                        </CommandItem>
+                                        ))
+                                    )}
+                                    </CommandGroup>
+                                </CommandList>
+                                </Command>
+                            </PopoverContent>
+                            </Popover>
+                            <FieldInfo field={field} />
+                        </>
+                        )}
+                    </form.Field>
                     </div>
+
 
                     {/* Queue selection */}
                     <div>

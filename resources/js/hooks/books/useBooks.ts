@@ -13,6 +13,16 @@ export interface Book {
   floor_id: number;
   created_at: string;
 }
+export interface User {
+  id: string;
+  email: string;
+  name: string;
+}
+
+export interface ApiUsersResponse {
+  data: User[];
+  // Puedes añadir otros campos si la API los devuelve (paginación, etc)
+}
 
 // Interface representing the actual API response structure
 export interface ApiPaginatedResponse<T> {
@@ -34,7 +44,20 @@ export interface ApiPaginatedResponse<T> {
   to: number;
   total: number;
 }
-
+export function useUsers() {
+  return useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      const { data } = await axios.get<ApiUsersResponse>("/api/users", {
+        headers: {
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      });
+      return data.data; // asumimos que los usuarios están en data.data
+    },
+  });
+}
 // Interface representing the expected format for the Table component
 export interface PaginatedResponse<T> {
   data: T[];

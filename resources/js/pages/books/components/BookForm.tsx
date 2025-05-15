@@ -78,7 +78,6 @@ export function BookForm({ initialData, page, perPage, genres, explosion, floors
 
     let prePisoId = undefined;
 
-    //ComboBox Controls
     const [selectedGenres, setSelectedGenres] = useState<string[]>(explosion ?? []);
     const [selectedFloor, setSelectedFloor] = useState<string | undefined>(prePisoId);
     const [selectedZone, setSelectedZone] = useState<string | undefined>(undefined);
@@ -374,48 +373,7 @@ export function BookForm({ initialData, page, perPage, genres, explosion, floors
                         />
                     </div>
 
-                    <div>
-                        <form.Field
-                            name="imagen"
-                        >
-                            {(field) => (
-                                <>
-                                    <Label htmlFor={field.name}>
-                                        <div className="mb-1 flex items-center gap-1">
-                                            <FilePenLine color="grey" size={18} />
-                                            {t('ui.books.fields.image')}
-                                        </div>
-                                    </Label>
-                                    <Input
-                                        id={field.name}
-                                        type="file"
-                                        name={field.name}
-                                        onChange={(e) => {
-                                            field.handleChange(e.target.files[0]);
-                                            setSelectedImage(e.target.files[0]);
-                                        }}
-                                        onBlur={field.handleBlur}
-                                        disabled={form.state.isSubmitting}
-                                        required={false}
-                                        autoComplete="off"
-                                    />
-                                    <FieldInfo field={field} />
-                                </>
-                            )}
-                        </form.Field>
-                    </div>
-
-                    {/* Image Preview */}
-                    {SelectedImage && (
-                        <img src={URL.createObjectURL(SelectedImage)} alt="Preview" style={{ width: '200px', height: 'auto', marginTop: '10px' }} />
-                    )}
-
-                    {/* Image Preview */}
-                    {imgPreviaUrl && !SelectedImage && (
-                        <span>
-                            <img src={imgPreviaUrl} alt="Preview" style={{ width: '200px', height: 'auto', marginTop: '10px' }} />
-                        </span>
-                    )}
+                   
                 </TabsContent>
 
                 <TabsContent value="location" className="space-y-4">

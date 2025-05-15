@@ -7,14 +7,25 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Book, useBooks, useDeleteBook } from '@/hooks/books/useBooks';
+import { Book, useBooks, useDeleteBook , useUsers  } from '@/hooks/books/useBooks';
 import { useTranslations } from '@/hooks/use-translations';
 import { BookLayout } from '@/layouts/books/BookLayout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Import, HandHelping, PencilIcon, PlusIcon, TrashIcon } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import { toast } from 'sonner';
+import { toast } from 'sonner'; 
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Command,
+  CommandInput,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+} from '@/components/ui/command';
+import { Check, ChevronsUpDown } from 'lucide-react';
+import { cn } from '@/lib/utils'; // función utilitaria para combinar clases
+
 
 interface BookIndexProps {
   floor_list: number[];
@@ -23,6 +34,17 @@ interface BookIndexProps {
 }
 
 export default function BooksIndex({ floor_list, zone_list, bookcase_list }: BookIndexProps) {
+  // Agrega el hook para obtener usuarios
+  const { data: users = [], isLoading: usersLoading, isError: usersError } = useUsers();
+
+  const emailOptions = useMemo(() => {
+    return users.map(user => ({
+      value: user.email,
+      label: user.email,
+    }));
+  }, [users]);
+  
+
   const { t } = useTranslations();
   const { url } = usePage();
   const urlParams = new URLSearchParams(url.split('?')[1] || '');
@@ -35,6 +57,7 @@ export default function BooksIndex({ floor_list, zone_list, bookcase_list }: Boo
   const [open, setOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [reserMail, setReserMail] = useState('');
+  const [emailOpen, setEmailOpen] = useState(false);
 
   const combinedSearch = [
     filters.title || 'null',
@@ -188,6 +211,7 @@ export default function BooksIndex({ floor_list, zone_list, bookcase_list }: Boo
 
               <DeleteDialog
                 id={book.id}
+                successMessage={t('messages.books.deleted')}
                 onDelete={handleDeleteBook}
                 title={t('ui.books.delete.title') || 'Delete book'}
                 description={
@@ -276,55 +300,108 @@ export default function BooksIndex({ floor_list, zone_list, bookcase_list }: Boo
       </div>
 
       {/* Reservation Dialog */}
-      <Dialog
-        open={open}
-        onOpenChange={(val) => {
-          setOpen(val);
-          if (!val) {
-            setReserMail('');
-            setSelectedBook(null);
+{/* Reservation Dialog */}
+<Dialog
+  open={open}
+  onOpenChange={(val) => {
+    setOpen(val);
+    if (!val) {
+      setReserMail('');
+      setSelectedBook(null);
+    }
+  }}
+>
+  <DialogContent className="w-[90vw] max-w-[425px]">
+    <DialogHeader>
+      <DialogTitle>{t('ui.reservations.utils.title')}</DialogTitle>
+      <DialogDescription>{t('ui.reservations.utils.description')}</DialogDescription>
+    </DialogHeader>
+
+    {selectedBook && (
+      <div className="grid gap-4 py-4">
+        {/* Book title */}
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="book-title" className="text-right">
+            {t('ui.reservations.utils.book')}
+          </Label>
+          <Input
+            id="book-title"
+            disabled
+            value={selectedBook?.title || ''}
+            className="col-span-3"
+          />
+        </div>
+        {/* Email selector using Command + Popover */}
+        <div className="grid grid-cols-4 items-center gap-4">
+          <Label htmlFor="email" className="text-right">
+            {t('ui.reservations.utils.email')}
+          </Label>
+          <Popover open={emailOpen} onOpenChange={setEmailOpen}>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-expanded={emailOpen}
+                className="w-full justify-between col-span-3"
+              >
+                {reserMail || t('ui.reservations.utils.select_email') || 'Selecciona un email'}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-full p-0">
+              <Command>
+                <CommandInput
+                  placeholder={t('ui.reservations.utils.search_email') || 'Buscar email...'}
+                />
+                <CommandEmpty>
+                  {t('ui.reservations.utils.no_email') || 'No se encontraron correos.'}
+                </CommandEmpty>
+                <CommandGroup>
+                  {emailOptions.map((email) => (
+                    <CommandItem
+                      key={email.value}
+                      value={email.value}
+                      onSelect={(currentValue) => {
+                        const matched = emailOptions.find(
+                          (opt) => opt.value.toLowerCase() === currentValue.toLowerCase()
+                        );
+                        setReserMail(matched?.value || currentValue);
+                        setEmailOpen(false);
+                      }}
+                    >
+                      <Check
+                        className={cn(
+                          'mr-2 h-4 w-4',
+                          reserMail === email.value ? 'opacity-100' : 'opacity-0'
+                        )}
+                      />
+                      {email.label}
+                    </CommandItem>
+                  ))}
+                </CommandGroup>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
+      </div>
+    )}
+    <DialogFooter>
+      <Button
+        onClick={() => {
+          if (!selectedBook || !reserMail) {
+            toast.error(t('ui.reservations.utils.required_fields') || 'Selecciona un libro y un correo.');
+            return;
           }
+          HandleReservation(selectedBook.id, reserMail);
+          setOpen(false);
         }}
       >
-        <DialogContent className="w-[90vw] max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{t('ui.reservations.utils.title')}</DialogTitle>
-            <DialogDescription>{t('ui.reservations.utils.description')}</DialogDescription>
-          </DialogHeader>
-          {selectedBook && (
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  {t('ui.reservations.utils.book')}
-                </Label>
-                <Input disabled id="name" value={selectedBook.title} className="col-span-3" />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                  {t('ui.reservations.utils.email')}
-                </Label>
-                <Input
-                  id="username"
-                  type="email"
-                  value={reserMail}
-                  onChange={(e) => setReserMail(e.target.value)}
-                  className="col-span-3"
-                />
-              </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button
-              onClick={() => {
-                if (selectedBook) HandleReservation(selectedBook.id, reserMail);
-                if (selectedBook) setOpen(false);
-              }}
-            >
-              {t('ui.reservations.utils.confirm')}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        {t('ui.reservations.utils.confirm')}
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
+
     </BookLayout>
   );
 }
