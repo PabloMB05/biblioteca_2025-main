@@ -336,7 +336,7 @@ return [
             'bookcase' => 'Ingrese una estantería...',
             'capacity' => 'Ingrese capacidad...'
         ],
-        'delete'[
+        'delete'=>[
             'title' => 'Eliminar estantería',
             'description' => '¿Estás seguro de que deseas eliminar esta estantería? Esta acción no se puede deshacer.',
         ],
@@ -781,7 +781,7 @@ return [
             "zones" => "Zona",
             "zone" => "Zona: ",
             "bookcases" => "Estantería",
-            "bookcase" => "Estantería: "
+            "bookcase" => "Estantería: ",
             "publisher"=> "Editorial",
         ],
         "placeholders" => [
