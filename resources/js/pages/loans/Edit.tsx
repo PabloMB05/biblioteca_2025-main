@@ -41,7 +41,7 @@ export default function CreateLoan({loan, lang, usermail, bookUUID, ddate, email
                         <CardTitle>
                             <div className="flex items-center gap-1">
                                 <Layers color="#2762c2" />
-                                {t('ui.loans.cards.create.title')}
+                                {t('ui.loans.cards.edit.title')}
                             </div>
                         </CardTitle>
                         <CardDescription>{t('ui.loans.cards.edit.description')}</CardDescription>

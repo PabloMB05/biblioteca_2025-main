@@ -1,16 +1,13 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "../../lib/axios";
 
-// Define a Zone type
 export interface Zone {
   id: string;
   number: number;
-  genre_name: string;
-  genre: string;
   capacity: number;
-  floor_id: string;
+  genre_name: string;
+  floor_number: number;
   created_at: string;
-  updated_at: string;
 }
 
 // Interface representing the actual API response structure
@@ -47,28 +44,26 @@ export interface PaginatedResponse<T> {
   };
 }
 
-interface UseZonesParams {
-  search?: string;
+interface UseZoneParams {
+  search?: any[];
   page?: number;
   perPage?: number;
-  floorId?: string;
 }
 
-export function useZones({ search, page = 1, perPage = 10, floorId }: UseZonesParams = {}) {
+export function useZones({ search, page = 1, perPage = 10 }: UseZoneParams = {}) {
   return useQuery({
-    queryKey: ["zones", { search, page, perPage, floorId }],
+    queryKey: ["zones", { search, page, perPage }],
     queryFn: async () => {
       const { data: apiResponse } = await axios.get<ApiPaginatedResponse<Zone>>("/api/zones", {
         params: {
           search,
           page,
           per_page: perPage,
-          floor_id: floorId,
         },
         headers: {
           'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
+          'X-Requested-With': 'XMLHttpRequest'
+        }
       });
 
       // Transform the API response to the expected format
@@ -80,8 +75,8 @@ export function useZones({ search, page = 1, perPage = 10, floorId }: UseZonesPa
           last_page: apiResponse.last_page,
           per_page: apiResponse.per_page,
           to: apiResponse.to,
-          total: apiResponse.total,
-        },
+          total: apiResponse.total
+        }
       } as PaginatedResponse<Zone>;
     },
   });
@@ -89,12 +84,12 @@ export function useZones({ search, page = 1, perPage = 10, floorId }: UseZonesPa
 
 export function useCreateZone() {
   return useMutation({
-    mutationFn: async (data: { number: number; genre_name: string; genre: string; capacity: number; floor_id: string }) => {
+    mutationFn: async (data: { title: string; genres: string; author: string ; length: number ; editor: string ; zonecase_id: string }) => {
       const response = await axios.post("/api/zones", data, {
         headers: {
           'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
+          'X-Requested-With': 'XMLHttpRequest'
+        }
       });
       return response.data;
     },
@@ -103,12 +98,12 @@ export function useCreateZone() {
 
 export function useUpdateZone(zoneId: string) {
   return useMutation({
-    mutationFn: async (data: { number: number; genre_name: string; genre: string; capacity: number; floor_id: string }) => {
+    mutationFn: async (data: { title: string; genres: string; author: string ; length: number ; editor: string ; zonecase_id: string }) => {
       const response = await axios.put(`/api/zones/${zoneId}`, data, {
         headers: {
           'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
+          'X-Requested-With': 'XMLHttpRequest'
+        }
       });
       return response.data;
     },
@@ -121,8 +116,8 @@ export function useDeleteZone() {
       await axios.delete(`/api/zones/${zoneId}`, {
         headers: {
           'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
+          'X-Requested-With': 'XMLHttpRequest'
+        }
       });
     },
   });

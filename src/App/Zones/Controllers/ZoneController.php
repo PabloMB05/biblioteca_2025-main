@@ -18,9 +18,17 @@ use Inertia\Response;
 class ZoneController extends Controller
 {
     // Mostrar todas las zonas
-    public function index(Request $request, ZoneIndexAction $action)
+public function index()
     {
-        return Inertia::render('zones/Index');
+
+        $floor_numbers = Floor::all()->pluck('floor_number')->map(function ($floor_number) {
+            return [
+                'label' => $floor_number,
+                'value' => $floor_number,
+            ];
+        })->toArray();
+
+        return Inertia::render('zones/Index', ['floor_list' => $floor_numbers]);
     }
 
     // Mostrar el formulario de creación de una nueva zona

@@ -1,6 +1,6 @@
 import { createActionsColumn, createTextColumn } from '@/components/stack-table/columnsTable';
 import { DeleteDialog } from '@/components/stack-table/DeleteDialog';
-import { FilterConfig, FiltersTable } from '@/components/stack-table/FiltersTable';
+import { FilterConfig, FiltersTable } from '@/components/stack-table/FiltersTableloans';
 import { Table } from '@/components/stack-table/Table';
 import { TableSkeleton } from '@/components/stack-table/TableSkeleton';
 import { Button } from '@/components/ui/button';
@@ -247,6 +247,7 @@ export default function LoansIndex({lang}:IndexLoanProps) {
                             </Link>
                             <DeleteDialog
                                 id={loan.id}
+                                 successMessage={t('messages.loans.deleted')}
                                 onDelete={handleDeleteLoan}
                                 title={t('ui.loans.delete.title') || 'Delete loan'}
                                 description={
@@ -276,12 +277,7 @@ export default function LoansIndex({lang}:IndexLoanProps) {
                 <div className="space-y-6">
                     <div className="flex items-center justify-between">
                         <h1 className="text-3xl font-bold">{t('ui.loans.title')}</h1>
-                        <Link href="/loans/create">
-                            <Button>
-                                <PlusIcon className="mr-2 h-4 w-4" />
-                                {t('ui.loans.buttons.new')}
-                            </Button>
-                        </Link>
+                        
                     </div>
 
                     <div className="space-y-4">

@@ -1,6 +1,6 @@
 import { createActionsColumn, createTextColumn } from '@/components/stack-table/columnsTable';
 import { DeleteDialog } from '@/components/stack-table/DeleteDialog';
-import { FilterConfig, FiltersTable } from '@/components/stack-table/FiltersTable';
+import { FilterConfig, FiltersTable } from '@/components/stack-table/FiltersTableloans';
 import { Table } from '@/components/stack-table/Table';
 import { TableSkeleton } from '@/components/stack-table/TableSkeleton';
 import { Button } from '@/components/ui/button';

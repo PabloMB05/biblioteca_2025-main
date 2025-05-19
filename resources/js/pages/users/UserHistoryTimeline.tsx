@@ -35,28 +35,9 @@ export default function UserHistoryTimeline({ user, loans, reservations }: Profi
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
-  const filterByDateRange = <T extends { expedit: string | null }>(items: T[]) => {
-    if (!startDate && !endDate) return items;
-
-    return items.filter((item) => {
-      if (!item.expedit) return false;
-      const expDate = new Date(item.expedit);
-      const start = startDate ? new Date(startDate) : null;
-      const end = endDate ? new Date(endDate) : null;
-
-      return (
-        (!start || expDate >= start) &&
-        (!end || expDate <= end)
-      );
-    });
-  };
-
-  const filteredLoans = filterByDateRange(loans);
-  const filteredReservations = filterByDateRange(reservations);
-
   return (
     <div className="space-y-6">
-      <TimeLineLayout  title={user.name}>
+      <TimeLineLayout title={user.name}>
         <div className="ml-3">
           <div className="mb-4">
             <h1 className="text-xl font-semibold">{user.name}</h1>
@@ -84,7 +65,13 @@ export default function UserHistoryTimeline({ user, loans, reservations }: Profi
             </div>
           </div>
         </div>
-        <TimeLineSection loans={filteredLoans} reservations={filteredReservations} />
+
+        <TimeLineSection
+          loans={loans}
+          reservations={reservations}
+          startDate={startDate}
+          endDate={endDate}
+        />
       </TimeLineLayout>
     </div>
   );

@@ -80,6 +80,12 @@ return [
     'loans' => [
         'title' => 'Loans',
         'no_results'=> 'No results',
+        'create'=> 'Loan Create',
+        'edit'=> 'Edit Loan',
+         'delete'=>[
+            'title'=> 'Delete Loan',
+            'description'=> 'Are you sure you want to delete this loan? This action cannot be undone.',
+        ],
         'buttons' => [
             'new' => 'New Loan',
         ],
@@ -367,18 +373,24 @@ return [
         ],
         'filters' => [
             'number' => 'Zone Number',
-            'capacity' => 'Capacity'
+            'capacity' => 'Capacity',
+            'floor'=> 'Floor Number',
+            'genre'=> 'Genre',
+            'all'=> 'All genres',
         ],
         'placeholders' => [
             'number' => 'Enter a number...',
             'capacity' => 'Enter capacity...',
+            'floor'=> 'Enter floor Number...',
+            'genre'=> 'Enter genre...',
         ],
         'columns' => [
             'number' => 'Zone Number',
             'capacity' => 'Capacity',
             'genre' => 'Genre',
             'created_at' => 'Created at',
-            'actions' => 'Actions'
+            'actions' => 'Actions',
+            'floor'=> 'Floor Number'
         ],
         'fields' => [
             'number' => 'Zone Number',
@@ -405,6 +417,7 @@ return [
         'title' => 'Users',
         'create' => 'Create User',
         'edit' => 'Edit User',
+        'total'=> 'Registered Users',
         'flters'=>[
             'search' => 'User search',
         ],

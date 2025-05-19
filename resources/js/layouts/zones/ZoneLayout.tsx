@@ -3,6 +3,7 @@ import { BreadcrumbItem } from "@/types";
 import { Head, usePage } from "@inertiajs/react";
 import { PropsWithChildren, useEffect } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "@/hooks/use-translations"; // Asegúrate que exista
 
 interface FlashMessages {
   success?: string;
@@ -19,6 +20,7 @@ interface ZoneLayoutProps extends PropsWithChildren {
 }
 
 export function ZoneLayout({ title, children }: ZoneLayoutProps) {
+  const { t } = useTranslations(); // 👈 usar hook de traducción
   const { flash } = usePage<PageProps>().props;
 
   useEffect(() => {
@@ -30,18 +32,20 @@ export function ZoneLayout({ title, children }: ZoneLayoutProps) {
     }
   }, [flash]);
 
+  const zonesTitle = t("ui.navigation.items.zones"); // 👈 traducción para "Zonas"
+
   const breadcrumbs: BreadcrumbItem[] = [
     {
-      title: "Dashboard",
+      title: t("ui.navigation.items.dashboard"),
       href: "/dashboard",
     },
     {
-      title: "Zonas", 
+      title: zonesTitle,
       href: "/zones",
     },
   ];
 
-  if (title !== "Zonas") { 
+  if (title !== zonesTitle) {
     breadcrumbs.push({
       title,
       href: "#",

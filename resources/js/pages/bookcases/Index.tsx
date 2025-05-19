@@ -88,12 +88,7 @@ export default function BookcasesIndex() {
                     id: 'zone_number',
                     header: t('ui.bookcases.columns.zone') || 'Zone',
                     accessorKey: 'zone_number',
-                }),
-                createTextColumn<Bookcase>({
-                    id: 'zone_genre',
-                    header: t('ui.bookcases.columns.zoneGenre') || "Zone's Genre",
-                    accessorKey: 'zone_genre',
-                }),
+                }),              
                 createDateColumn<Bookcase>({
                     id: 'created_at',
                     header: t('ui.bookcases.columns.created_at') || 'Created At',
@@ -178,12 +173,6 @@ export default function BookcasesIndex() {
                                         label: t('ui.bookcases.filters.zone') ,
                                         type: 'number',
                                         placeholder: t('ui.bookcases.placeholders.zone') ,
-                                    },
-                                    {
-                                        id: 'genre',
-                                        label: t('ui.bookcases.filters.genres') || 'Genero',
-                                        type: 'text',
-                                        placeholder: t('ui.bookcases.placeholders.genres') ,
                                     },
                                 ] as FilterConfig[]
                             }

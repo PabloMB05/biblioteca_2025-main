@@ -2,30 +2,41 @@
 
 namespace Domain\Zones\Actions;
 
+use Domain\Models\floors\Floor;
 use Domain\Zones\Data\Resources\ZoneResource;
 use Domain\Zones\Models\Zone;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-
-use Illuminate\Support\Facades\Log;
 
 class ZoneIndexAction
 {
-    public function __invoke(?string $search = null, int $perPage = 10, ?string $floorId = null): LengthAwarePaginator
+    public function __invoke(?array $search = null, int $perPage = 10)
     {
-        $query = Zone::with(['floor', 'genre'])
-            ->when($search, function ($query, $search) {
-                $query->where(function ($q) use ($search) {
-                    $q->where('number', 'like', "%{$search}%")
-                      ->orWhere('genre_name', 'like', "%{$search}%")
-                      ->orWhereHas('floor', function ($q) use ($search) {
-                          $q->where('name', 'like', "%{$search}%");
-                      });
-                });
+        $number = $search[0];
+        $capacity = $search[1];
+        $genre = $search[2];
+        $floor = $search[3];
+
+        $floorModel = Floor::query()->when($floor !== "null", function ($query) use ($floor) {
+            $query->where('floor_number', '=', $floor);
+        })->first();
+
+        $floor_id = $floorModel ? $floorModel->id : null;
+
+        $zone = Zone::query()
+            ->when($number !== "null", function ($query) use ($number) {
+                $query->where('number', '=', $number);
             })
-            ->when($floorId, function ($query, $floorId) {
-                $query->where('floor_id', $floorId);
-            });
-    
-        return $query->orderBy('number')->paginate($perPage);
+            ->when($capacity !== "null", function ($query) use ($capacity) {
+                $query->where('capacity', '=', $capacity);
+            })
+            ->when($genre !== "null", function ($query) use ($genre) {
+                $query->where('genre_name', 'ILIKE', '%' . $genre . '%');
+            })
+            ->when($floor !== "null", function ($query) use ($floor_id) {
+                $query->where('floor_id', '=', $floor_id);
+            })
+            ->latest()
+            ->paginate($perPage);
+
+        return $zone->through(fn($zone) => ZoneResource::fromModel($zone));
     }
 }

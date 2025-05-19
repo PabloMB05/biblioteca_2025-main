@@ -61,7 +61,29 @@ return [
             'update' => 'Error al actualizar el Libro',
             'delete' => 'Error al eliminar el Libro',
         ],
-    ],    
+    ],
+    'loans'=>[
+        'updated'=> 'Préstamo actualizado correctamente',
+        'created' => 'Préstamo creado correctamente',
+        'deleted' => 'Préstamo eliminado correctamente',
+            
+        'error'=> [
+            'create' => 'Error al crear el Préstamo',
+            'update' => 'Error al actualizar el Préstamo',
+            'delete' => 'Error al eliminar el Préstamo',
+        ],
+    ],
+    'reservations'=>[
+        'updated'=> 'Reserva actualizada correctamente',
+        'created' => 'Reserva creada correctamente',
+        'deleted' => 'Reserva eliminada correctamente',
+            
+        'error'=> [
+            'create' => 'Error al crear la Reserva',
+            'update' => 'Error al actualizar la Reserva',
+            'delete' => 'Error al eliminar la Reserva',
+        ],
+    ],
     
 
 ];

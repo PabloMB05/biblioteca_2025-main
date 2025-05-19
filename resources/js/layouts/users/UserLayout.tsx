@@ -3,6 +3,7 @@ import { BreadcrumbItem } from "@/types";
 import { Head, usePage } from "@inertiajs/react";
 import { PropsWithChildren, useEffect } from "react";
 import { toast } from "sonner";
+import { useTranslations } from "@/hooks/use-translations"; // 👈 correcto
 
 interface FlashMessages {
   success?: string;
@@ -19,6 +20,7 @@ interface UserLayoutProps extends PropsWithChildren {
 }
 
 export function UserLayout({ title, children }: UserLayoutProps) {
+  const { t } = useTranslations(); // 👈 usar el hook importado correctamente
   const { flash } = usePage<PageProps>().props;
 
   useEffect(() => {
@@ -32,16 +34,16 @@ export function UserLayout({ title, children }: UserLayoutProps) {
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
-      title: "Dashboard",
+      title: t("ui.navigation.items.dashboard"),
       href: "/dashboard",
     },
     {
-      title: "Usuarios",
+      title: t("ui.navigation.items.users"),
       href: "/users",
     },
   ];
 
-  if (title !== "Usuarios") {
+  if (title !== t("ui.navigation.items.users")) {
     breadcrumbs.push({
       title,
       href: "#",

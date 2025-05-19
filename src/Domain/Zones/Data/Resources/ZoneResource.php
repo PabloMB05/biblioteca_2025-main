@@ -23,15 +23,16 @@ class ZoneResource extends Data
     public static function fromModel(Zone $zone): self
     {
      
-        
+        $piso = Floor::find($zone->floor_id);
+        $floor_number = $piso->floor_number;
    
         return new self(
             id: $zone->id,
             number: $zone->number,
             capacity: $zone->capacity,
             genre_name: $zone->genre_name, 
-            floor_id: $zone->floor_id,
-            
+
+            floor_id: $floor_number,
             created_at: $zone->created_at->format('Y-m-d H:i:s'),
             updated_at: $zone->updated_at->format('Y-m-d H:i:s'),
         );

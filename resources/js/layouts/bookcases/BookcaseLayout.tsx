@@ -32,18 +32,21 @@ export function BookcaseLayout({ title, children }: BookcaseLayoutProps) {
         }
     }, [flash]);
 
+    const dashboardTitle = t('ui.navigation.items.dashboard');
+    const bookcasesTitle = t('ui.navigation.items.bookcases');
+
     const breadcrumbs: BreadcrumbItem[] = [
         {
-            title: 'Dashboard',
+            title: dashboardTitle,
             href: '/dashboard',
         },
         {
-            title: 'Estanterías',
+            title: bookcasesTitle,
             href: '/bookcases',
         },
     ];
 
-    if (title !== t('ui.bookcases.title')) {
+    if (title !== bookcasesTitle) {
         breadcrumbs.push({
             title,
             href: '#',

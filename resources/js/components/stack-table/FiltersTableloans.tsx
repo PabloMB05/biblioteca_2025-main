@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { enUS, es } from 'date-fns/locale';
 import {
   Popover,
   PopoverContent,
@@ -134,12 +135,22 @@ export interface FiltersTableProps {
   debounce?: number;
   /** Título para el popover de filtros en móvil */
   filtersTitle?: string;
+  /** css styling */
+  containerClassName?: string;
   /** Texto para el botón de filtros */
   filtersButtonText?: string;
   /** Texto para el botón de limpiar filtros */
   clearFiltersText?: string;
+  /** parametro de lenguage para el mapeo */
+  lang?: string;
 }
 
+  // Constante de mapeo de lenguages
+
+  const langMap = {
+    en: enUS,
+    es: es,
+  }
 /**
  * Componente para filtrar datos de una tabla
  */
@@ -149,8 +160,10 @@ export function FiltersTable({
   initialValues = {},
   debounce = 300,
   filtersTitle,
+  containerClassName,
   filtersButtonText,
   clearFiltersText,
+  lang,
 }: FiltersTableProps) {
   const { t } = useTranslations();
   const [open, setOpen] = useState(false);
@@ -213,7 +226,7 @@ export function FiltersTable({
       acc[filter.id] = undefined;
       return acc;
     }, {} as Record<string, any>);
-    
+
     setFilterValues(emptyValues);
     form.reset(emptyValues);
   };
@@ -227,8 +240,8 @@ export function FiltersTable({
     <div className="w-full">
       <div className="hidden md:flex flex-wrap gap-4 items-end">
         <Form {...form}>
-          <div className="flex flex-wrap gap-4">
-            {filters.map((filter) => (
+        <div className={cn("flex flex-wrap gap-4", containerClassName)}>
+        {filters.map((filter) => (
               <FormField
                 key={filter.id}
                 control={form.control}
@@ -240,6 +253,7 @@ export function FiltersTable({
                       {renderFilterInput(
                         filter,
                         field,
+                        lang,
                         (value) => handleFilterChange(filter.id, value)
                       )}
                     </FormControl>
@@ -319,8 +333,8 @@ export function FiltersTable({
                     {clearFiltersText || t("ui.common.filters.clear")}
                   </Button>
                 )}
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   onClick={() => setOpen(false)}
                 >
                   {t("ui.common.buttons.close")}
@@ -340,7 +354,9 @@ export function FiltersTable({
 function renderFilterInput(
   filter: FilterConfig,
   field: any,
+  lang: string,
   onChange: (value: any) => void
+
 ) {
   switch (filter.type) {
     case "text":
@@ -364,14 +380,11 @@ function renderFilterInput(
           }}
         >
           <SelectTrigger>
-            <SelectValue 
-              placeholder={filter.placeholder} 
+            <SelectValue
+              placeholder={filter.placeholder}
             />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">
-              {filter.placeholder || "Todos"}
-            </SelectItem>
             {(filter as SelectFilterConfig).options.map((option) => (
               <SelectItem key={option.value} value={option.value}>
                 {option.label}
@@ -403,6 +416,8 @@ function renderFilterInput(
             <Calendar
               mode="single"
               selected={field.value}
+              timeZone='Europe/Madrid'
+              locale={langMap[lang]}
               onSelect={(date: Date | undefined) => {
                 field.onChange(date);
                 onChange(date);
